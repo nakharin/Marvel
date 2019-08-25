@@ -1,9 +1,9 @@
 package com.nakharin.marvel.data.di
 
-import com.nakharin.marvel.domain.main.MainUseCase
+import com.nakharin.marvel.domain.content.ContentUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
 
-    factory { MainUseCase(get()) }
+    factory { ContentUseCase(get()) }
 }

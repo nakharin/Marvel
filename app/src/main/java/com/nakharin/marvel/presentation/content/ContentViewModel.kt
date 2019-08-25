@@ -17,7 +17,7 @@ import com.nakharin.marvel.MarvelGlideModule
 import com.nakharin.marvel.R
 import com.nakharin.marvel.UiOnProgressListener
 import com.nakharin.marvel.data.api.ApiStatus
-import com.nakharin.marvel.domain.main.MainUseCase
+import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nakharin.marvel.extension.addTo
 import com.nakharin.marvel.presentation.BaseViewModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileOutputStream
 
-class ContentViewModel(private val mainUseCase: MainUseCase) : BaseViewModel<JsonContent>() {
+class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel<JsonContent>() {
 
     private val contentStatus = MutableLiveData<ApiStatus<JsonContent>>()
 
@@ -44,7 +44,7 @@ class ContentViewModel(private val mainUseCase: MainUseCase) : BaseViewModel<Jso
 
 
     fun getContents() {
-        mainUseCase.execute()
+        contentUseCase.execute()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { contentStatus.value = ApiStatus.Loading }
