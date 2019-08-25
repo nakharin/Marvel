@@ -20,7 +20,7 @@ import okhttp3.OkHttpClient
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-
+// https://medium.com/@mr.johnnyne/how-to-use-glide-v4-load-image-with-progress-update-eb02671dac18
 @GlideModule
 class MarvelGlideModule : AppGlideModule() {
 
