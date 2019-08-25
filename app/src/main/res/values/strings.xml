@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Marvel</string>
+    <string name="str_please_login_again">เนื่องจากคุณไม่ได้เข้าระบบเป็นเวลานาน ดังนั้นจึงต้อง Login ใหม่</string>
+    <string name="str_ok">ตกลง</string>
+    <string name="str_session_expired">Session Expired</string>
+    <string name="str_save_completed">บันทึกสำเร็จ</string>
+</resources>
