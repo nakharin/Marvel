@@ -1,26 +1,25 @@
-package com.nakharin.marvel.domain
+package com.nakharin.marvel.data.repository
 
 import com.nakharin.marvel.data.source.ContentDataSource
-import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.Test
 
-class ContentUseCaseTest {
+class ApiRepositoryTest {
 
-    private val useCase: ContentUseCase = mock()
+    private val repository: ApiRepository = mock()
 
     @Test
-    fun test_ContentUseCase_Should_Return_Success() {
+    fun test_GetContent_Should_Return_Success() {
 
         val dataSource = ContentDataSource()
         val response = dataSource.generate()
 
-        whenever(useCase.execute())
+        whenever(repository.getContents())
             .thenReturn(Observable.just(response))
 
-        useCase.execute()
+        repository.getContents()
             .test()
             .assertComplete()
             .assertValue {
@@ -29,13 +28,14 @@ class ContentUseCaseTest {
     }
 
     @Test
-    fun test_ContentUseCase_Should_Return_Fail() {
+    fun test_GetContent_Should_Return_Fail() {
+
         val errorMessage = "404 Data Not found"
 
-        whenever(useCase.execute())
+        whenever(repository.getContents())
             .thenReturn(Observable.error(Throwable(errorMessage)))
 
-        useCase.execute()
+        repository.getContents()
             .test()
             .assertError {
                 it.localizedMessage == errorMessage

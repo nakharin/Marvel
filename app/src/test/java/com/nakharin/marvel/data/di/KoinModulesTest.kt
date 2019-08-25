@@ -1,10 +1,7 @@
-package com.nakharin.marvel.di
+package com.nakharin.marvel.data.di
 
 import android.app.Application
 import android.content.Context
-import com.nakharin.marvel.data.di.repositoryModule
-import com.nakharin.marvel.data.di.useCaseModule
-import com.nakharin.marvel.data.di.utilityModule
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Test
 import org.koin.core.context.startKoin

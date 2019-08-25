@@ -126,6 +126,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
             } catch (e: Exception) {
                 e.printStackTrace()
                 saveStatus.value = ApiStatus.Fail(e.localizedMessage)
+                saveStatus.value = ApiStatus.Done
             }
 
             // Tell the media scanner about the new file so that it is
