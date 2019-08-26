@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -29,7 +30,7 @@ class ContentActivity : BaseActivity() {
 
     private val pzDialog: PzLoadingDialogView by inject { parametersOf(false) }
 
-    private lateinit var contentAdapter: ContentAdapter
+    private val contentAdapter: ContentAdapter = ContentAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +48,8 @@ class ContentActivity : BaseActivity() {
 
     private fun setUpView() {
 
-        val linearLayoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         mainRcvContents.layoutManager = linearLayoutManager
-
-        contentAdapter = ContentAdapter()
         mainRcvContents.adapter = contentAdapter
     }
 
