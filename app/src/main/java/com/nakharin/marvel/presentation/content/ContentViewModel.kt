@@ -31,17 +31,10 @@ import java.io.FileOutputStream
 class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel<JsonContent>() {
 
     private val contentStatus = MutableLiveData<ApiStatus<JsonContent>>()
-
-    fun contentStatus(): LiveData<ApiStatus<JsonContent>> {
-        return contentStatus
-    }
-
     private val saveStatus = MutableLiveData<ApiStatus<String>>()
 
-    fun saveStatus(): LiveData<ApiStatus<String>> {
-        return saveStatus
-    }
-
+    fun contentStatus(): LiveData<ApiStatus<JsonContent>> = contentStatus
+    fun saveStatus(): LiveData<ApiStatus<String>> = saveStatus
 
     fun getContents() {
         contentUseCase.execute()
@@ -112,7 +105,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 .submit()
                 .get()
 
-            val root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
+            val root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                .toString()
             val myDir = File(root)
             myDir.mkdirs()
             val file = File(myDir, "${context.getString(R.string.app_name)}_$position.jpg")

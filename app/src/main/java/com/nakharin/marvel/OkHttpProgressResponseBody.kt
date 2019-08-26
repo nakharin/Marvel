@@ -6,7 +6,6 @@ import okhttp3.HttpUrl
 import okio.*
 import java.io.IOException
 
-
 class OkHttpProgressResponseBody(
     private val url: HttpUrl,
     private val responseBody: ResponseBody,
