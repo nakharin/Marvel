@@ -17,6 +17,7 @@ import com.nakharin.marvel.MarvelGlideModule
 import com.nakharin.marvel.R
 import com.nakharin.marvel.UiOnProgressListener
 import com.nakharin.marvel.data.api.ApiStatus
+import com.nakharin.marvel.data.api.successfully
 import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nakharin.marvel.extension.addTo
 import com.nakharin.marvel.presentation.BaseViewModel
@@ -28,13 +29,13 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileOutputStream
 
-class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel<JsonContent>() {
+class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel() {
 
     private val contentStatus = MutableLiveData<ApiStatus<JsonContent>>()
-    private val saveStatus = MutableLiveData<ApiStatus<String>>()
+    private val saveImageStatus = MutableLiveData<ApiStatus<String>>()
 
     fun contentStatus(): LiveData<ApiStatus<JsonContent>> = contentStatus
-    fun saveStatus(): LiveData<ApiStatus<String>> = saveStatus
+    fun saveImageStatus(): LiveData<ApiStatus<String>> = saveImageStatus
 
     fun getContents() {
         contentUseCase.execute()
@@ -43,7 +44,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
             .doOnSubscribe { contentStatus.value = ApiStatus.Loading }
             .doOnTerminate { contentStatus.value = ApiStatus.Done }
             .subscribe({
-                if (it.success && it.data != null) {
+                if (it.successfully) {
                     contentStatus.value = ApiStatus.Success(it.data!!)
 
                 } else {
@@ -58,7 +59,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     private val uiOnProgressListener = object : UiOnProgressListener {
 
         override fun onProgress(bytesRead: Long, expectedLength: Long) {
-            saveStatus.value = ApiStatus.Progress(bytesRead, expectedLength)
+            saveImageStatus.value = ApiStatus.Progress(bytesRead, expectedLength)
         }
 
         override fun getGranualityPercentage(): Float {
@@ -67,7 +68,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     }
 
     fun saveImage(context: Context, url: String, position: Int) {
-        saveStatus.value = ApiStatus.Loading
+        saveImageStatus.value = ApiStatus.Loading
 
         runAsync {
             val requestOptions = RequestOptions()
@@ -119,8 +120,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 out.close()
             } catch (e: Exception) {
                 e.printStackTrace()
-                saveStatus.value = ApiStatus.Fail(e.localizedMessage)
-                saveStatus.value = ApiStatus.Done
+                saveImageStatus.value = ApiStatus.Fail(e.localizedMessage)
+                saveImageStatus.value = ApiStatus.Done
             }
 
             // Tell the media scanner about the new file so that it is
@@ -131,8 +132,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 null
             ) { path, _ ->
                 runOnUiThread {
-                    saveStatus.value = ApiStatus.Success(path)
-                    saveStatus.value = ApiStatus.Done
+                    saveImageStatus.value = ApiStatus.Success(path)
+                    saveImageStatus.value = ApiStatus.Done
                 }
             }
         }

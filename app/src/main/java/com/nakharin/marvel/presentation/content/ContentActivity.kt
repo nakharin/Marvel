@@ -4,9 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.OrientationHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -41,15 +38,12 @@ class ContentActivity : BaseActivity() {
         viewModel.getContents()
 
         viewModel.contentStatus().observe(this, contentObserver)
-        viewModel.saveStatus().observe(this, saveObserver)
+        viewModel.saveImageStatus().observe(this, saveImageObserver)
 
         contentAdapter.setOnItemClickLister(onItemClickListener)
     }
 
     private fun setUpView() {
-
-        val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        mainRcvContents.layoutManager = linearLayoutManager
         mainRcvContents.adapter = contentAdapter
     }
 
@@ -80,24 +74,32 @@ class ContentActivity : BaseActivity() {
             .check()
     }
 
-    /********************************************* Observer *****************************************************/
+    private fun showLoading() {
+        pzDialog.showLoading(supportFragmentManager)
+    }
+
+    private fun hideLoading() {
+        pzDialog.hideLoading()
+    }
+
+    /************************************* Observer *********************************************/
 
     private val contentObserver = Observer<ApiStatus<JsonContent>> {
         when (it) {
-            ApiStatus.Loading -> pzDialog.showLoading(supportFragmentManager)
+            ApiStatus.Loading -> showLoading()
             is ApiStatus.Success -> {
                 mainTxtTitle.text = it.data.title
                 contentAdapter.addAllItem(it.data.images)
             }
             is ApiStatus.Fail -> showDialogMessage("", it.message)
             is ApiStatus.Error -> showDialogMessage("", it.throwable.localizedMessage)
-            ApiStatus.Done -> pzDialog.hideLoading()
+            ApiStatus.Done -> hideLoading()
         }
     }
 
-    private val saveObserver = Observer<ApiStatus<String>> {
+    private val saveImageObserver = Observer<ApiStatus<String>> {
         when (it) {
-            ApiStatus.Loading -> pzDialog.showLoading(supportFragmentManager)
+            ApiStatus.Loading -> showLoading()
             is ApiStatus.Progress -> {
                 val downloading = it.bytesRead / 1024
                 val maxSize = it.expectedLength / 1024
@@ -106,11 +108,11 @@ class ContentActivity : BaseActivity() {
             is ApiStatus.Success -> toast(getString(R.string.str_save_completed))
             is ApiStatus.Fail -> showDialogMessage("", it.message)
             is ApiStatus.Error -> showDialogMessage("", it.throwable.localizedMessage)
-            ApiStatus.Done -> pzDialog.hideLoading()
+            ApiStatus.Done -> hideLoading()
         }
     }
 
-    /********************************************* Listener *****************************************************/
+    /************************************* Listener *********************************************/
 
     private val onItemClickListener: (View, String, Int) -> Unit = { view, url, position ->
         checkSaveImagePermissionGranted {

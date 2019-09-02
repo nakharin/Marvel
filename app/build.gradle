@@ -91,4 +91,8 @@ dependencies {
      */
     // Kotlin library for Android
     implementation 'com.pawegio.kandroid:kandroid:0.8.8@aar'
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.1.1"
 }

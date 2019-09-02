@@ -60,6 +60,21 @@ class ContentViewModelTest {
     }
 
     @Test
+    fun testGetImageListShouldReturnList() {
+        val dataSource = ContentDataSource()
+        val response = dataSource.generate()
+        whenever(useCase.execute())
+            .thenReturn(Observable.just(response))
+
+        useCase.execute()
+            .test()
+            .assertComplete()
+            .assertValue {
+                it.data?.images!!.isNotEmpty()
+            }
+    }
+
+    @Test
     fun testSaveImage_hasData_ShouldReturnSuccess() {
 
         val dataSource = ContentDataSource()
@@ -70,7 +85,7 @@ class ContentViewModelTest {
 
         viewModel.saveImage(context, url, 0)
 
-        assert(viewModel.saveStatus().value != ApiStatus.Fail(""))
-        assert(viewModel.saveStatus().value != ApiStatus.Error(Throwable("")))
+        assert(viewModel.saveImageStatus().value != ApiStatus.Fail(""))
+        assert(viewModel.saveImageStatus().value != ApiStatus.Error(Throwable("")))
     }
 }

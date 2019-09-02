@@ -5,13 +5,10 @@ import com.google.gson.annotations.SerializedName
 import com.nakharin.marvel.extension.KParcelable
 import com.nakharin.marvel.extension.parcelableCreator
 
-class JsonContent() : KParcelable {
-
-    @SerializedName("title")
-    var title: String = ""
-
-    @SerializedName("image")
-    var images: ArrayList<String> = arrayListOf()
+data class JsonContent(
+    @SerializedName("title") var title: String = "",
+    @SerializedName("image") var images: ArrayList<String> = arrayListOf()
+) : KParcelable {
 
     constructor(parcel: Parcel) : this() {
         title = parcel.readString() ?: ""
