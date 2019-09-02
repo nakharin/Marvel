@@ -38,6 +38,27 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     fun saveImageStatus(): LiveData<ApiStatus<String>> = saveImageStatus
 
     fun getContents() {
+//        contentStatus.value = ApiStatus.Loading
+//        viewModelScope.launch {
+//            try {
+//                val contentResponse = withContext(Dispatchers.IO) {
+//                    contentUseCase.execute()
+//                }
+//                delay(2000L)
+//                if (contentResponse.successfully) {
+//                    contentStatus.value = ApiStatus.Done
+//                    contentStatus.value = ApiStatus.Success(contentResponse.data!!)
+//
+//                } else {
+//                    contentStatus.value = ApiStatus.Done
+//                    contentStatus.value = ApiStatus.Fail(contentResponse.message)
+//                }
+//            } catch (e: java.lang.Exception) {
+//                contentStatus.value = ApiStatus.Done
+//                contentStatus.value = ApiStatus.Error(Throwable(e))
+//            }
+//        }
+
         contentUseCase.execute()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
