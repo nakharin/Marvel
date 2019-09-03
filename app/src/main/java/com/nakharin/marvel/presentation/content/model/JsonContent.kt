@@ -6,8 +6,13 @@ import com.nakharin.marvel.extension.KParcelable
 import com.nakharin.marvel.extension.parcelableCreator
 
 data class JsonContent(
-    @SerializedName("title") var title: String = "",
-    @SerializedName("image") var images: ArrayList<String> = arrayListOf()
+
+    @SerializedName("title")
+    var title: String = "",
+
+    @SerializedName("image")
+    var images: ArrayList<String> = arrayListOf()
+
 ) : KParcelable {
 
     constructor(parcel: Parcel) : this() {

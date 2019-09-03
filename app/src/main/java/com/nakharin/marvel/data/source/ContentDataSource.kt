@@ -14,7 +14,7 @@ class ContentDataSource {
     fun generate(): ApiResponse<JsonContent> {
         return ApiResponse<JsonContent>().apply {
             success = true
-            code = Code.SUCCESS
+            code = Code.SUCCEEDED
             message = "Success"
             data = sourceStr.convertToJsonModel<JsonContent>()
         }

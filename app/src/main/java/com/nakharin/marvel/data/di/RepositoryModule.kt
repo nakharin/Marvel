@@ -6,7 +6,7 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    factory { ApiRepository(provideContentDataSource()) }
+    single { ApiRepository(provideContentDataSource()) }
 }
 
 private fun provideContentDataSource(): ContentDataSource {
