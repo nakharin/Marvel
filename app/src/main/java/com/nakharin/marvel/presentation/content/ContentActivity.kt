@@ -5,14 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.nakharin.marvel.R
 import com.nakharin.marvel.data.api.ApiStatus
-import com.nakharin.marvel.presentation.BaseActivity
+import com.nakharin.marvel.presentation.BaseMarvelActivity
 import com.nakharin.marvel.presentation.content.adapter.ContentAdapter
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.pawegio.kandroid.toast
@@ -21,7 +16,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class ContentActivity : BaseActivity() {
+class ContentActivity : BaseMarvelActivity() {
 
     private val viewModel: ContentViewModel by viewModel()
 
@@ -45,33 +40,6 @@ class ContentActivity : BaseActivity() {
 
     private fun setUpView() {
         mainRcvContents.adapter = contentAdapter
-    }
-
-    private fun checkSaveImagePermissionGranted(onPermissionsGranted: () -> Unit) {
-        Dexter.withActivity(this)
-            .withPermissions(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                    if (report.areAllPermissionsGranted()) {
-                        onPermissionsGranted()
-                    }
-
-                    if (report.isAnyPermissionPermanentlyDenied) {
-                        showSettingsDialog("This app needs [WRITE_EXTERNAL_STORAGE] permission to use this feature. You can grant them in app settings.")
-                    }
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    permissions: MutableList<PermissionRequest>?,
-                    token: PermissionToken
-                ) {
-                    token.continuePermissionRequest()
-                }
-            }).onSameThread()
-            .check()
     }
 
     private fun showLoading() {
@@ -115,7 +83,12 @@ class ContentActivity : BaseActivity() {
     /************************************* Listener *********************************************/
 
     private val onItemClickListener: (View, String, Int) -> Unit = { view, url, position ->
-        checkSaveImagePermissionGranted {
+        val permissions = mutableListOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        checkPermissionsGranted(permissions) {
             viewModel.saveImage(view.context, url, position)
         }
     }

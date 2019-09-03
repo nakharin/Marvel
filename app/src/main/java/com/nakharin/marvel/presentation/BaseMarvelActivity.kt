@@ -1,22 +1,12 @@
 package com.nakharin.marvel.presentation
 
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
-import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.load.HttpException
 import com.emcsthai.pz.utilitylibrary.view.PzDialogConfirmFragment
 import com.nakharin.marvel.R
 import com.nakharin.marvel.data.api.Constants
 
-abstract class BaseActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+abstract class BaseMarvelActivity : BasePermissionActivity() {
 
     fun showDialogMessage(title: String, message: String) {
         showDialogMessage(title, message, true, PzDialogConfirmFragment.State.NORMAL)
@@ -120,25 +110,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 false,
                 PzDialogConfirmFragment.State.NORMAL
             )
-        }
-    }
-
-    fun showSettingsDialog(message: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Need Permissions")
-        builder.setMessage(message)
-        builder.setPositiveButton("GOTO SETTINGS") { dialog, _ ->
-            dialog.cancel()
-            openSettings()
-        }.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.cancel()
-        }.show()
-    }
-
-    fun openSettings() {
-        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", packageName, null)
-            startActivityForResult(this, 101)
         }
     }
 }
