@@ -22,7 +22,7 @@ class ContentActivity : BaseMarvelActivity() {
 
     private val pzDialog: PzLoadingDialogView by inject { parametersOf(false) }
 
-    private val contentAdapter: ContentAdapter = ContentAdapter()
+    private lateinit var contentAdapter: ContentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +39,7 @@ class ContentActivity : BaseMarvelActivity() {
     }
 
     private fun setUpView() {
+        contentAdapter = ContentAdapter()
         mainRcvContents.adapter = contentAdapter
     }
 
