@@ -53,14 +53,14 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
             .subscribeOn(Schedulers.io())
             .doOnSubscribe { contentState.value = ApiState.Loading }
             .doOnTerminate { contentState.value = ApiState.Done }
-            .subscribe({
-                it.isSuccessfully({ data ->
+            .subscribe({ response ->
+                response.isSuccessfully({ data ->
                     contentState.value = ApiState.Success(data)
                 }, { message ->
                     contentState.value = ApiState.Fail(message)
                 })
-            }, {
-                contentState.value = ApiState.Error(it)
+            }, { throwable ->
+                contentState.value = ApiState.Error(throwable)
             })
             .addTo(compositeDisposable)
     }
