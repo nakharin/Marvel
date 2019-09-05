@@ -8,7 +8,12 @@ import com.nakharin.marvel.utils.coroutines.Coroutines
 import java.io.File
 import java.io.FileOutputStream
 
-fun Bitmap.saveToGallery(context: Context, filePath: String, onCompleted: (path: String) -> Unit, onException: (e: Exception) -> Unit) {
+fun Bitmap.saveToGallery(
+    context: Context,
+    filePath: String,
+    onCompleted: (path: String) -> Unit,
+    onException: (e: Exception) -> Unit
+) {
     val root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         .toString()
     val myDir = File(root)
