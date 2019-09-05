@@ -15,72 +15,70 @@ import com.bumptech.glide.request.target.Target
 import com.nakharin.marvel.GlideApp
 import com.nakharin.marvel.MarvelGlideModule
 import com.nakharin.marvel.R
-import com.nakharin.marvel.UiOnProgressListener
-import com.nakharin.marvel.data.api.ApiStatus
-import com.nakharin.marvel.data.api.successfully
+import com.nakharin.marvel.utils.glide.UiOnProgressListener
+import com.nakharin.marvel.utils.coroutines.Coroutines
+import com.nakharin.marvel.data.api.ApiState
+import com.nakharin.marvel.data.api.isSuccessfully
 import com.nakharin.marvel.domain.content.ContentUseCase
-import com.nakharin.marvel.extension.addTo
+import com.nakharin.marvel.utils.extension.addTo
 import com.nakharin.marvel.presentation.BaseViewModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.pawegio.kandroid.runAsync
 import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.delay
 import java.io.File
 import java.io.FileOutputStream
 
 class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel() {
 
-    private val contentStatus = MutableLiveData<ApiStatus<JsonContent>>()
-    private val saveImageStatus = MutableLiveData<ApiStatus<String>>()
+    private val contentStatus = MutableLiveData<ApiState<JsonContent>>()
+    private val saveImageStatus = MutableLiveData<ApiState<String>>()
 
-    fun contentStatus(): LiveData<ApiStatus<JsonContent>> = contentStatus
-    fun saveImageStatus(): LiveData<ApiStatus<String>> = saveImageStatus
+    fun contentStatus(): LiveData<ApiState<JsonContent>> = contentStatus
+    fun saveImageStatus(): LiveData<ApiState<String>> = saveImageStatus
+
+    fun getContentsCoroutines() {
+        contentStatus.value = ApiState.Loading
+        Coroutines.io {
+            val contentResponse = contentUseCase.executeCoroutines()
+            delay(2000L)
+            Coroutines.main {
+                contentResponse.isSuccessfully({
+                    contentStatus.value = ApiState.Done
+                    contentStatus.value = ApiState.Success(it)
+                }, {
+                    contentStatus.value = ApiState.Done
+                    contentStatus.value = ApiState.Fail(it)
+                })
+            }
+        }
+    }
 
     fun getContents() {
-//        contentStatus.value = ApiStatus.Loading
-//        viewModelScope.launch {
-//            try {
-//                val contentResponse = withContext(Dispatchers.IO) {
-//                    contentUseCase.execute()
-//                }
-//                delay(2000L)
-//                if (contentResponse.successfully) {
-//                    contentStatus.value = ApiStatus.Done
-//                    contentStatus.value = ApiStatus.Success(contentResponse.data!!)
-//
-//                } else {
-//                    contentStatus.value = ApiStatus.Done
-//                    contentStatus.value = ApiStatus.Fail(contentResponse.message)
-//                }
-//            } catch (e: java.lang.Exception) {
-//                contentStatus.value = ApiStatus.Done
-//                contentStatus.value = ApiStatus.Error(Throwable(e))
-//            }
-//        }
-
         contentUseCase.execute()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .doOnSubscribe { contentStatus.value = ApiStatus.Loading }
-            .doOnTerminate { contentStatus.value = ApiStatus.Done }
+            .doOnSubscribe { contentStatus.value = ApiState.Loading }
+            .doOnTerminate { contentStatus.value = ApiState.Done }
             .subscribe({
-                if (it.successfully) {
-                    contentStatus.value = ApiStatus.Success(it.data!!)
-
-                } else {
-                    contentStatus.value = ApiStatus.Fail(it.message)
-                }
+                it.isSuccessfully({ data ->
+                    contentStatus.value = ApiState.Success(data)
+                }, { message ->
+                    contentStatus.value = ApiState.Fail(message)
+                })
             }, {
-                contentStatus.value = ApiStatus.Error(it)
+                contentStatus.value = ApiState.Error(it)
             })
             .addTo(compositeDisposable)
     }
 
-    private val uiOnProgressListener = object : UiOnProgressListener {
+    private val uiOnProgressListener = object :
+        UiOnProgressListener {
 
         override fun onProgress(bytesRead: Long, expectedLength: Long) {
-            saveImageStatus.value = ApiStatus.Progress(bytesRead, expectedLength)
+            saveImageStatus.value = ApiState.Progress(bytesRead, expectedLength)
         }
 
         override fun getGranualityPercentage(): Float {
@@ -89,7 +87,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     }
 
     fun saveImage(context: Context, url: String, position: Int) {
-        saveImageStatus.value = ApiStatus.Loading
+        saveImageStatus.value = ApiState.Loading
 
         runAsync {
             val requestOptions = RequestOptions()
@@ -141,8 +139,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 out.close()
             } catch (e: Exception) {
                 e.printStackTrace()
-                saveImageStatus.value = ApiStatus.Fail(e.localizedMessage)
-                saveImageStatus.value = ApiStatus.Done
+                saveImageStatus.value = ApiState.Fail(e.localizedMessage)
+                saveImageStatus.value = ApiState.Done
             }
 
             // Tell the media scanner about the new file so that it is
@@ -153,8 +151,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 null
             ) { path, _ ->
                 runOnUiThread {
-                    saveImageStatus.value = ApiStatus.Success(path)
-                    saveImageStatus.value = ApiStatus.Done
+                    saveImageStatus.value = ApiState.Success(path)
+                    saveImageStatus.value = ApiState.Done
                 }
             }
         }

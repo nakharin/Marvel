@@ -6,14 +6,14 @@ import com.google.gson.Gson
  * A generic class that holds a value with its loading status.
  * @param <T>
  */
-sealed class ApiStatus<out R> {
+sealed class ApiState<out R> {
 
-    object Loading : ApiStatus<Nothing>()
-    data class Progress(val bytesRead: Long, val expectedLength: Long) : ApiStatus<Nothing>()
-    data class Success<out T>(val data: T) : ApiStatus<T>()
-    data class Fail(val message: String) : ApiStatus<Nothing>()
-    data class Error(val throwable: Throwable) : ApiStatus<Nothing>()
-    object Done : ApiStatus<Nothing>()
+    object Loading : ApiState<Nothing>()
+    data class Progress(val bytesRead: Long, val expectedLength: Long) : ApiState<Nothing>()
+    data class Success<out T>(val data: T) : ApiState<T>()
+    data class Fail(val message: String) : ApiState<Nothing>()
+    data class Error(val throwable: Throwable) : ApiState<Nothing>()
+    object Done : ApiState<Nothing>()
 
     override fun toString(): String {
         return when (this) {
@@ -28,11 +28,11 @@ sealed class ApiStatus<out R> {
 }
 
 /**
- * `true` if [ApiStatus] is of type [Success] & holds non-null [Success.data].
+ * `true` if [ApiState] is of type [Success] & holds non-null [Success.data].
  */
-val ApiStatus<*>.successfully
-    get() = this is ApiStatus.Success && data != null
+val ApiState<*>.successfully
+    get() = this is ApiState.Success && data != null
 
 fun <T> Result<T>.successOr(fallback: T): T {
-    return (this as? ApiStatus.Success<T>)?.data ?: fallback
+    return (this as? ApiState.Success<T>)?.data ?: fallback
 }

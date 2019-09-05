@@ -1,4 +1,4 @@
-package com.nakharin.marvel.extension
+package com.nakharin.marvel.utils.extension
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

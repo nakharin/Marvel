@@ -1,4 +1,4 @@
-package com.nakharin.marvel
+package com.nakharin.marvel.utils.glide
 
 interface UiOnProgressListener {
     fun onProgress(bytesRead: Long, expectedLength: Long)

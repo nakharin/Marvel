@@ -1,4 +1,4 @@
-package com.nakharin.marvel.extension
+package com.nakharin.marvel.utils.extension
 
 import android.os.Parcel
 import android.os.Parcelable

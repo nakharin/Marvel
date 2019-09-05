@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nakharin.marvel.R
-import com.nakharin.marvel.`typealias`.OnItemClickListener
-import com.nakharin.marvel.extension.load
+import com.nakharin.marvel.utils.`typealias`.OnItemClickListener
+import com.nakharin.marvel.utils.extension.load
 import kotlinx.android.synthetic.main.view_holder_content_body.view.*
 
 class ContentBodyViewHolder(view: View) : RecyclerView.ViewHolder(view) {

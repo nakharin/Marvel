@@ -2,7 +2,7 @@ package com.nakharin.marvel.presentation
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nakharin.marvel.data.api.ApiStatus
+import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.data.source.ContentDataSource
 import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nakharin.marvel.presentation.content.ContentViewModel
@@ -55,8 +55,8 @@ class ContentViewModelTest {
 
         viewModel.getContents()
 
-        assert(viewModel.contentStatus().value != ApiStatus.Fail(""))
-        assert(viewModel.contentStatus().value != ApiStatus.Error(Throwable("")))
+        assert(viewModel.contentStatus().value != ApiState.Fail(""))
+        assert(viewModel.contentStatus().value != ApiState.Error(Throwable("")))
     }
 
     @Test
@@ -81,11 +81,11 @@ class ContentViewModelTest {
         val response = dataSource.generate()
         val url = response.data!!.images[0]
 
-        doReturn(ApiStatus.Success("aaaaa"))
+        doReturn(ApiState.Success("aaaaa"))
 
         viewModel.saveImage(context, url, 0)
 
-        assert(viewModel.saveImageStatus().value != ApiStatus.Fail(""))
-        assert(viewModel.saveImageStatus().value != ApiStatus.Error(Throwable("")))
+        assert(viewModel.saveImageStatus().value != ApiState.Fail(""))
+        assert(viewModel.saveImageStatus().value != ApiState.Error(Throwable("")))
     }
 }

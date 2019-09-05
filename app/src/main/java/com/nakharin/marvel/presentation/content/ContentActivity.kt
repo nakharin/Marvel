@@ -6,7 +6,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
 import com.nakharin.marvel.R
-import com.nakharin.marvel.data.api.ApiStatus
+import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.presentation.BaseMarvelActivity
 import com.nakharin.marvel.presentation.content.adapter.ContentAdapter
 import com.nakharin.marvel.presentation.content.model.JsonContent
@@ -30,7 +30,7 @@ class ContentActivity : BaseMarvelActivity() {
 
         setUpView()
 
-        viewModel.getContents()
+        viewModel.getContentsCoroutines()
 
         viewModel.contentStatus().observe(this, contentObserver)
         viewModel.saveImageStatus().observe(this, saveImageObserver)
@@ -52,31 +52,31 @@ class ContentActivity : BaseMarvelActivity() {
 
     /************************************* Observer *********************************************/
 
-    private val contentObserver = Observer<ApiStatus<JsonContent>> {
+    private val contentObserver = Observer<ApiState<JsonContent>> {
         when (it) {
-            ApiStatus.Loading -> showLoading()
-            is ApiStatus.Success -> {
+            ApiState.Loading -> showLoading()
+            is ApiState.Success -> {
                 mainTxtTitle.text = it.data.title
                 contentAdapter.addAllItem(it.data.images)
             }
-            is ApiStatus.Fail -> showDialogMessage("", it.message)
-            is ApiStatus.Error -> showDialogMessage("", it.throwable.localizedMessage)
-            ApiStatus.Done -> hideLoading()
+            is ApiState.Fail -> showDialogMessage("", it.message)
+            is ApiState.Error -> showDialogMessage("", it.throwable.localizedMessage)
+            ApiState.Done -> hideLoading()
         }
     }
 
-    private val saveImageObserver = Observer<ApiStatus<String>> {
+    private val saveImageObserver = Observer<ApiState<String>> {
         when (it) {
-            ApiStatus.Loading -> showLoading()
-            is ApiStatus.Progress -> {
+            ApiState.Loading -> showLoading()
+            is ApiState.Progress -> {
                 val downloading = it.bytesRead / 1024
                 val maxSize = it.expectedLength / 1024
                 pzDialog.setMessage("$downloading/$maxSize kb downloading...")
             }
-            is ApiStatus.Success -> toast(getString(R.string.str_save_completed))
-            is ApiStatus.Fail -> showDialogMessage("", it.message)
-            is ApiStatus.Error -> showDialogMessage("", it.throwable.localizedMessage)
-            ApiStatus.Done -> hideLoading()
+            is ApiState.Success -> toast(getString(R.string.str_save_completed))
+            is ApiState.Fail -> showDialogMessage("", it.message)
+            is ApiState.Error -> showDialogMessage("", it.throwable.localizedMessage)
+            ApiState.Done -> hideLoading()
         }
     }
 

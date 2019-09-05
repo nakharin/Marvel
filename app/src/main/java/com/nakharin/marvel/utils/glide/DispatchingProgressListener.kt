@@ -1,4 +1,4 @@
-package com.nakharin.marvel
+package com.nakharin.marvel.utils.glide
 
 import android.os.Handler
 import android.os.Looper

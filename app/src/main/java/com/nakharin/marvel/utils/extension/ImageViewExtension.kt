@@ -1,4 +1,4 @@
-package com.nakharin.marvel.extension
+package com.nakharin.marvel.utils.extension
 
 import android.annotation.SuppressLint
 import android.content.Context

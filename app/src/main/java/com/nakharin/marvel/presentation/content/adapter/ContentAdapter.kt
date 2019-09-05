@@ -2,7 +2,7 @@ package com.nakharin.marvel.presentation.content.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.nakharin.marvel.`typealias`.OnItemClickListener
+import com.nakharin.marvel.utils.`typealias`.OnItemClickListener
 
 class ContentAdapter : RecyclerView.Adapter<ContentBodyViewHolder>() {
 

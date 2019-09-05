@@ -16,6 +16,10 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
+import com.nakharin.marvel.utils.glide.DispatchingProgressListener
+import com.nakharin.marvel.utils.glide.OkHttpProgressResponseBody
+import com.nakharin.marvel.utils.glide.ResponseProgressListener
+import com.nakharin.marvel.utils.glide.UiOnProgressListener
 import okhttp3.OkHttpClient
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
@@ -61,10 +65,15 @@ class MarvelGlideModule : AppGlideModule() {
                 val request = chain.request()
                 val response = chain.proceed(request)
 
-                val listener: ResponseProgressListener = DispatchingProgressListener()
+                val listener: ResponseProgressListener =
+                    DispatchingProgressListener()
 
                 val okHttpProgressResponseBody =
-                    OkHttpProgressResponseBody(request.url(), response.body()!!, listener)
+                    OkHttpProgressResponseBody(
+                        request.url(),
+                        response.body()!!,
+                        listener
+                    )
 
                 response.newBuilder()
                     .body(okHttpProgressResponseBody).build()

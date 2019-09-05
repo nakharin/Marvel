@@ -1,4 +1,4 @@
-package com.nakharin.marvel.extension
+package com.nakharin.marvel.utils.extension
 
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable

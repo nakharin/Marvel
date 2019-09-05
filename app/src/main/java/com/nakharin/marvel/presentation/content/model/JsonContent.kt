@@ -2,8 +2,8 @@ package com.nakharin.marvel.presentation.content.model
 
 import android.os.Parcel
 import com.google.gson.annotations.SerializedName
-import com.nakharin.marvel.extension.KParcelable
-import com.nakharin.marvel.extension.parcelableCreator
+import com.nakharin.marvel.utils.extension.KParcelable
+import com.nakharin.marvel.utils.extension.parcelableCreator
 
 data class JsonContent(
 

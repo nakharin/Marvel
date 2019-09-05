@@ -10,4 +10,8 @@ class ApiRepository(private val dataSource: ContentDataSource) : Repository {
     fun getContents(): Observable<ApiResponse<JsonContent>> {
         return Observable.just(dataSource.generate())
     }
+
+    suspend fun getContentsCoroutines(): ApiResponse<JsonContent> {
+        return dataSource.generate()
+    }
 }

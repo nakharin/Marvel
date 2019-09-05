@@ -13,4 +13,8 @@ class ContentUseCase(private val apiRepository: ApiRepository) : BaseUseCase() {
         return apiRepository.getContents()
             .delay(2, TimeUnit.SECONDS)
     }
+
+    suspend fun executeCoroutines(): ApiResponse<JsonContent> {
+        return apiRepository.getContentsCoroutines()
+    }
 }

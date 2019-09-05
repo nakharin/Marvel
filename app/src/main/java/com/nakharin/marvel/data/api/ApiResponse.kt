@@ -34,3 +34,11 @@ data class ApiResponse<T>(
 
 val ApiResponse<*>.successfully
     get() = success && data != null
+
+fun <T> ApiResponse<T>.isSuccessfully(succeeded: (T) -> Unit, failed: (String) -> Unit) {
+    if (success && data != null) {
+        succeeded(data!!)
+    } else {
+        failed(message)
+    }
+}

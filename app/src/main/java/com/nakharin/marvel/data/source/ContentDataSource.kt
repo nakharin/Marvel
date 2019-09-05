@@ -2,7 +2,7 @@ package com.nakharin.marvel.data.source
 
 import com.nakharin.marvel.data.api.ApiResponse
 import com.nakharin.marvel.data.api.Code
-import com.nakharin.marvel.extension.convertToJsonModel
+import com.nakharin.marvel.utils.extension.convertToJsonModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
 
 class ContentDataSource {
