@@ -7,27 +7,33 @@ import kotlinx.coroutines.launch
 
 object Coroutines {
 
+    val Main = Dispatchers.Main
+    val IO = Dispatchers.IO
+    val Default = Dispatchers.Default
+    @ExperimentalCoroutinesApi
+    val Unconfined = Dispatchers.Unconfined
+
     fun main(scope: suspend () -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Main).launch {
             scope()
         }
     }
 
     fun io(scope: suspend () -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(IO).launch {
             scope()
         }
     }
 
     fun default(scope: suspend () -> Unit) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Default).launch {
             scope()
         }
     }
 
     @ExperimentalCoroutinesApi
     fun unconfined(scope: suspend () -> Unit) {
-        CoroutineScope(Dispatchers.Unconfined).launch {
+        CoroutineScope(Unconfined).launch {
             scope()
         }
     }
