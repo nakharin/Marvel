@@ -21,8 +21,6 @@ import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nakharin.marvel.presentation.BaseViewModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.nakharin.marvel.utils.coroutines.Coroutines
-import com.nakharin.marvel.utils.exception.ApiException
-import com.nakharin.marvel.utils.exception.NoInternetException
 import com.nakharin.marvel.utils.extension.addTo
 import com.nakharin.marvel.utils.glide.UiOnProgressListener
 import com.pawegio.kandroid.runAsync
@@ -54,14 +52,9 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                     }, {
                         contentStatus.value = ApiState.Fail(it)
                     })
-
-                } catch (e: ApiException) {
-                    contentStatus.value = ApiState.Error(Throwable(e))
+                } catch (e: Exception) {
                     e.printStackTrace()
-
-                } catch (e: NoInternetException) {
                     contentStatus.value = ApiState.Error(Throwable(e))
-                    e.printStackTrace()
                 }
             }
         }
