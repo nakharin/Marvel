@@ -55,8 +55,8 @@ class ContentViewModelTest {
 
         viewModel.getContents()
 
-        assert(viewModel.contentStatus().value != ApiState.Fail(""))
-        assert(viewModel.contentStatus().value != ApiState.Error(Throwable("")))
+        assert(viewModel.contentState().value != ApiState.Fail(""))
+        assert(viewModel.contentState().value != ApiState.Error(Throwable("")))
     }
 
     @Test
@@ -85,7 +85,7 @@ class ContentViewModelTest {
 
         viewModel.saveImage(context, url, 0)
 
-        assert(viewModel.saveImageStatus().value != ApiState.Fail(""))
-        assert(viewModel.saveImageStatus().value != ApiState.Error(Throwable("")))
+        assert(viewModel.saveImageState().value != ApiState.Fail(""))
+        assert(viewModel.saveImageState().value != ApiState.Error(Throwable("")))
     }
 }

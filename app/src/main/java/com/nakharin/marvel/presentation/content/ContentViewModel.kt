@@ -32,27 +32,27 @@ import java.io.FileOutputStream
 
 class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewModel() {
 
-    private val contentStatus = MutableLiveData<ApiState<JsonContent>>()
-    private val saveImageStatus = MutableLiveData<ApiState<String>>()
+    private val contentState = MutableLiveData<ApiState<JsonContent>>()
+    private val saveImageState = MutableLiveData<ApiState<String>>()
 
-    fun contentStatus(): LiveData<ApiState<JsonContent>> = contentStatus
-    fun saveImageStatus(): LiveData<ApiState<String>> = saveImageStatus
+    fun contentState(): LiveData<ApiState<JsonContent>> = contentState
+    fun saveImageState(): LiveData<ApiState<String>> = saveImageState
 
     fun getContentsCoroutines() {
-        contentStatus.value = ApiState.Loading
+        contentState.value = ApiState.Loading
         Coroutines.io {
             val response = contentUseCase.executeCoroutines()
             Coroutines.main {
-                contentStatus.value = ApiState.Done
+                contentState.value = ApiState.Done
                 try {
                     response.isSuccessfully({
-                        contentStatus.value = ApiState.Success(it)
+                        contentState.value = ApiState.Success(it)
                     }, {
-                        contentStatus.value = ApiState.Fail(it)
+                        contentState.value = ApiState.Fail(it)
                     })
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    contentStatus.value = ApiState.Error(Throwable(e))
+                    contentState.value = ApiState.Error(Throwable(e))
                 }
             }
         }
@@ -62,16 +62,16 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
         contentUseCase.execute()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .doOnSubscribe { contentStatus.value = ApiState.Loading }
-            .doOnTerminate { contentStatus.value = ApiState.Done }
+            .doOnSubscribe { contentState.value = ApiState.Loading }
+            .doOnTerminate { contentState.value = ApiState.Done }
             .subscribe({
                 it.isSuccessfully({ data ->
-                    contentStatus.value = ApiState.Success(data)
+                    contentState.value = ApiState.Success(data)
                 }, { message ->
-                    contentStatus.value = ApiState.Fail(message)
+                    contentState.value = ApiState.Fail(message)
                 })
             }, {
-                contentStatus.value = ApiState.Error(it)
+                contentState.value = ApiState.Error(it)
             })
             .addTo(compositeDisposable)
     }
@@ -80,7 +80,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
         UiOnProgressListener {
 
         override fun onProgress(bytesRead: Long, expectedLength: Long) {
-            saveImageStatus.value = ApiState.Progress(bytesRead, expectedLength)
+            saveImageState.value = ApiState.Progress(bytesRead, expectedLength)
         }
 
         override fun getGranualityPercentage(): Float {
@@ -89,7 +89,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     }
 
     fun saveImage(context: Context, url: String, position: Int) {
-        saveImageStatus.value = ApiState.Loading
+        saveImageState.value = ApiState.Loading
 
         runAsync {
             val requestOptions = RequestOptions()
@@ -141,8 +141,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 out.close()
             } catch (e: Exception) {
                 e.printStackTrace()
-                saveImageStatus.value = ApiState.Fail(e.localizedMessage)
-                saveImageStatus.value = ApiState.Done
+                saveImageState.value = ApiState.Fail(e.localizedMessage)
+                saveImageState.value = ApiState.Done
             }
 
             // Tell the media scanner about the new file so that it is
@@ -153,8 +153,8 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 null
             ) { path, _ ->
                 runOnUiThread {
-                    saveImageStatus.value = ApiState.Success(path)
-                    saveImageStatus.value = ApiState.Done
+                    saveImageState.value = ApiState.Success(path)
+                    saveImageState.value = ApiState.Done
                 }
             }
         }

@@ -32,8 +32,8 @@ class ContentActivity : BaseMarvelActivity() {
 
         viewModel.getContentsCoroutines()
 
-        viewModel.contentStatus().observe(this, contentObserver)
-        viewModel.saveImageStatus().observe(this, saveImageObserver)
+        viewModel.contentState().observe(this, contentObserver)
+        viewModel.saveImageState().observe(this, saveImageObserver)
 
         contentAdapter.setOnItemClickLister(onItemClickListener)
     }
