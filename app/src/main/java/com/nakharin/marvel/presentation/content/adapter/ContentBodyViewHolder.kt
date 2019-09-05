@@ -19,11 +19,11 @@ class ContentBodyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    fun bind(position: Int, url: String, mOnItemClickListener: OnItemClickListener<String>?) {
+    fun bind(position: Int, url: String, onItemClickListener: OnItemClickListener<String>?) {
         itemView.contentBodyImgPhoto.load(url)
 
         itemView.contentBodyCrdRoot.setOnClickListener {
-            mOnItemClickListener?.invoke(it, url, position)
+            onItemClickListener?.invoke(it, url, position)
         }
     }
 }
