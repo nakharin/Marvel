@@ -1,9 +1,6 @@
 package com.nakharin.marvel.utils.coroutines
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 object Coroutines {
 
@@ -12,6 +9,14 @@ object Coroutines {
     val Default = Dispatchers.Default
     @ExperimentalCoroutinesApi
     val Unconfined = Dispatchers.Unconfined
+
+    fun launch(scope: suspend () -> Unit) {
+        runBlocking {
+            launch {
+                scope()
+            }
+        }
+    }
 
     fun main(scope: suspend () -> Unit) {
         CoroutineScope(Main).launch {
