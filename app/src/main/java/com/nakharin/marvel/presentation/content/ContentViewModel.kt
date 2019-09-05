@@ -15,14 +15,16 @@ import com.bumptech.glide.request.target.Target
 import com.nakharin.marvel.GlideApp
 import com.nakharin.marvel.MarvelGlideModule
 import com.nakharin.marvel.R
-import com.nakharin.marvel.utils.glide.UiOnProgressListener
-import com.nakharin.marvel.utils.coroutines.Coroutines
 import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.data.api.isSuccessfully
 import com.nakharin.marvel.domain.content.ContentUseCase
-import com.nakharin.marvel.utils.extension.addTo
 import com.nakharin.marvel.presentation.BaseViewModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
+import com.nakharin.marvel.utils.coroutines.Coroutines
+import com.nakharin.marvel.utils.exception.ApiException
+import com.nakharin.marvel.utils.exception.NoInternetException
+import com.nakharin.marvel.utils.extension.addTo
+import com.nakharin.marvel.utils.glide.UiOnProgressListener
 import com.pawegio.kandroid.runAsync
 import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -42,16 +44,25 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     fun getContentsCoroutines() {
         contentStatus.value = ApiState.Loading
         Coroutines.io {
-            val contentResponse = contentUseCase.executeCoroutines()
+            val response = contentUseCase.executeCoroutines()
             delay(2000L)
             Coroutines.main {
-                contentResponse.isSuccessfully({
-                    contentStatus.value = ApiState.Done
-                    contentStatus.value = ApiState.Success(it)
-                }, {
-                    contentStatus.value = ApiState.Done
-                    contentStatus.value = ApiState.Fail(it)
-                })
+                contentStatus.value = ApiState.Done
+                try {
+                    response.isSuccessfully({
+                        contentStatus.value = ApiState.Success(it)
+                    }, {
+                        contentStatus.value = ApiState.Fail(it)
+                    })
+
+                } catch (e: ApiException) {
+                    contentStatus.value = ApiState.Error(Throwable(e))
+                    e.printStackTrace()
+
+                } catch (e: NoInternetException) {
+                    contentStatus.value = ApiState.Error(Throwable(e))
+                    e.printStackTrace()
+                }
             }
         }
     }
