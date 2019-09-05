@@ -45,10 +45,10 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
             Coroutines.main {
                 contentState.value = ApiState.Done
                 try {
-                    response.isSuccessfully({
-                        contentState.value = ApiState.Success(it)
-                    }, {
-                        contentState.value = ApiState.Fail(it)
+                    response.isSuccessfully({ data ->
+                        contentState.value = ApiState.Success(data)
+                    }, { message ->
+                        contentState.value = ApiState.Fail(message)
                     })
                 } catch (e: Exception) {
                     e.printStackTrace()
