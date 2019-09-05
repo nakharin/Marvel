@@ -3,36 +3,53 @@ package com.nakharin.marvel.presentation
 import android.app.Dialog
 import com.bumptech.glide.load.HttpException
 import com.emcsthai.pz.utilitylibrary.view.PzDialogConfirmFragment
+import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
 import com.nakharin.marvel.R
 import com.nakharin.marvel.data.api.Constants
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 abstract class BaseMarvelActivity : BasePermissionActivity() {
 
-    fun showDialogMessage(title: String, message: String) {
+    private val pzDialog: PzLoadingDialogView by inject { parametersOf(false) }
+
+    internal fun showLoading() {
+        pzDialog.showLoading(supportFragmentManager)
+    }
+
+    internal fun setMessageLoading(message: String) {
+        pzDialog.setMessage(message)
+    }
+
+    internal fun hideLoading() {
+        pzDialog.hideLoading()
+    }
+
+    internal fun showDialogMessage(title: String, message: String) {
         showDialogMessage(title, message, true, PzDialogConfirmFragment.State.NORMAL)
     }
 
-    fun showDialogMessage(title: String, message: String, onOneCallback: ((Dialog) -> Unit)?) {
+    internal fun showDialogMessage(title: String, message: String, onOneCallback: ((Dialog) -> Unit)?) {
         showDialogMessage(title, message, false, PzDialogConfirmFragment.State.NORMAL, onOneCallback)
     }
 
-    fun showDialogMessage(title: String, message: String, isCancelable: Boolean) {
+    internal fun showDialogMessage(title: String, message: String, isCancelable: Boolean) {
         showDialogMessage(title, message, isCancelable, PzDialogConfirmFragment.State.NORMAL)
     }
 
-    fun showDialogMessage(title: String, message: String, isCancelable: Boolean, onOneCallback: ((Dialog) -> Unit)?) {
+    internal fun showDialogMessage(title: String, message: String, isCancelable: Boolean, onOneCallback: ((Dialog) -> Unit)?) {
         showDialogMessage(title, message, isCancelable, PzDialogConfirmFragment.State.NORMAL, onOneCallback)
     }
 
-    fun showDialogMessage(title: String, message: String, state: PzDialogConfirmFragment.State) {
+    internal fun showDialogMessage(title: String, message: String, state: PzDialogConfirmFragment.State) {
         showDialogMessage(title, message, true, state)
     }
 
-    fun showDialogMessage(title: String, message: String, isCancelable: Boolean, state: PzDialogConfirmFragment.State) {
+    internal fun showDialogMessage(title: String, message: String, isCancelable: Boolean, state: PzDialogConfirmFragment.State) {
         showDialogMessage(title, message, isCancelable, state, null)
     }
 
-    fun showDialogMessage(
+    internal fun showDialogMessage(
         title: String,
         message: String,
         isCancelable: Boolean,
@@ -54,7 +71,7 @@ abstract class BaseMarvelActivity : BasePermissionActivity() {
             }.build()
     }
 
-    fun showDialogMessage(
+    internal fun showDialogMessage(
         title: String,
         message: String,
         isCancelable: Boolean,
@@ -82,7 +99,7 @@ abstract class BaseMarvelActivity : BasePermissionActivity() {
             }).build()
     }
 
-    fun responseAuthenError(error: Throwable) {
+    internal fun responseAuthenError(error: Throwable) {
         try {
             val httpException = error as HttpException
             if (httpException.statusCode == Constants.AUTHORIZATION_CODE) {

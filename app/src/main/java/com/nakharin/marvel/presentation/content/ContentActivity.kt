@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
 import com.nakharin.marvel.R
 import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.presentation.BaseMarvelActivity
@@ -12,15 +11,11 @@ import com.nakharin.marvel.presentation.content.adapter.ContentAdapter
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class ContentActivity : BaseMarvelActivity() {
 
     private val viewModel: ContentViewModel by viewModel()
-
-    private val pzDialog: PzLoadingDialogView by inject { parametersOf(false) }
 
     private lateinit var contentAdapter: ContentAdapter
 
@@ -41,14 +36,6 @@ class ContentActivity : BaseMarvelActivity() {
     private fun setUpView() {
         contentAdapter = ContentAdapter()
         mainRcvContents.adapter = contentAdapter
-    }
-
-    private fun showLoading() {
-        pzDialog.showLoading(supportFragmentManager)
-    }
-
-    private fun hideLoading() {
-        pzDialog.hideLoading()
     }
 
     /************************************* Observer *********************************************/
@@ -72,7 +59,7 @@ class ContentActivity : BaseMarvelActivity() {
             is ApiState.Progress -> {
                 val downloading = it.bytesRead / 1024
                 val maxSize = it.expectedLength / 1024
-                pzDialog.setMessage("$downloading/$maxSize kb downloading...")
+                setMessageLoading("$downloading/$maxSize kb downloading...")
             }
             is ApiState.Success -> toast(getString(R.string.str_save_completed))
             is ApiState.Fail -> showDialogMessage("", it.message)
