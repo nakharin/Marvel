@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         tools:context=".presentation.content.ContentActivity">
 
@@ -12,17 +12,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorGray"
+            android:padding="8dp"
             android:textColor="@color/colorWhite"
-            tools:text="Title"
             android:textSize="24sp"
-            android:padding="8dp"/>
+            tools:text="Title" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRcvContents"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            tools:listitem="@layout/view_holder_content_body"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/view_holder_content_body" />
 
 </LinearLayout>
