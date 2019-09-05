@@ -35,10 +35,10 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     private val contentState = MutableLiveData<ApiState<JsonContent>>()
     private val saveImageState = MutableLiveData<ApiState<String>>()
 
-    fun contentState(): LiveData<ApiState<JsonContent>> = contentState
-    fun saveImageState(): LiveData<ApiState<String>> = saveImageState
+    fun getContentState(): LiveData<ApiState<JsonContent>> = contentState
+    fun getSaveImageState(): LiveData<ApiState<String>> = saveImageState
 
-    fun getContentsCoroutines() {
+    fun fetchContentsAtCoroutines() {
         contentState.value = ApiState.Loading
         Coroutines.io {
             val response = contentUseCase.executeCoroutines()
@@ -58,7 +58,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
         }
     }
 
-    fun getContents() {
+    fun fetchContentsAtObservable() {
         contentUseCase.execute()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())

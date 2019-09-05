@@ -53,10 +53,10 @@ class ContentViewModelTest {
         whenever(useCase.execute())
             .thenReturn(Observable.just(response))
 
-        viewModel.getContents()
+        viewModel.fetchContentsAtObservable()
 
-        assert(viewModel.contentState().value != ApiState.Fail(""))
-        assert(viewModel.contentState().value != ApiState.Error(Throwable("")))
+        assert(viewModel.getContentState().value != ApiState.Fail(""))
+        assert(viewModel.getContentState().value != ApiState.Error(Throwable("")))
     }
 
     @Test
@@ -85,7 +85,7 @@ class ContentViewModelTest {
 
         viewModel.saveImage(context, url, 0)
 
-        assert(viewModel.saveImageState().value != ApiState.Fail(""))
-        assert(viewModel.saveImageState().value != ApiState.Error(Throwable("")))
+        assert(viewModel.getSaveImageState().value != ApiState.Fail(""))
+        assert(viewModel.getSaveImageState().value != ApiState.Error(Throwable("")))
     }
 }
