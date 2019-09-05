@@ -23,8 +23,6 @@ import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.nakharin.marvel.utils.coroutines.Coroutines
 import com.nakharin.marvel.utils.extension.addTo
 import com.nakharin.marvel.utils.glide.UiOnProgressListener
-import com.pawegio.kandroid.runAsync
-import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
@@ -91,7 +89,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
     fun saveImage(context: Context, url: String, position: Int) {
         saveImageState.value = ApiState.Loading
 
-        runAsync {
+        Coroutines.io {
             val requestOptions = RequestOptions()
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -132,8 +130,11 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
             val myDir = File(root)
             myDir.mkdirs()
             val file = File(myDir, "${context.getString(R.string.app_name)}_$position.jpg")
-            if (file.exists())
+
+            if (file.exists()) {
                 file.delete()
+            }
+
             try {
                 val out = FileOutputStream(file)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
@@ -141,8 +142,10 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 out.close()
             } catch (e: Exception) {
                 e.printStackTrace()
-                saveImageState.value = ApiState.Fail(e.localizedMessage)
-                saveImageState.value = ApiState.Done
+                Coroutines.main {
+                    saveImageState.value = ApiState.Fail(e.localizedMessage)
+                    saveImageState.value = ApiState.Done
+                }
             }
 
             // Tell the media scanner about the new file so that it is
@@ -152,7 +155,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
                 arrayOf(file.toString()),
                 null
             ) { path, _ ->
-                runOnUiThread {
+                Coroutines.main {
                     saveImageState.value = ApiState.Success(path)
                     saveImageState.value = ApiState.Done
                 }
