@@ -27,7 +27,6 @@ import com.pawegio.kandroid.runAsync
 import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.delay
 import java.io.File
 import java.io.FileOutputStream
 
@@ -43,7 +42,6 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
         contentStatus.value = ApiState.Loading
         Coroutines.io {
             val response = contentUseCase.executeCoroutines()
-            delay(2000L)
             Coroutines.main {
                 contentStatus.value = ApiState.Done
                 try {
