@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nakharin.marvel.R
-import com.nakharin.marvel.utils.`typealias`.OnItemClickListener
-import com.nakharin.marvel.utils.extension.load
+import com.nakharin.marvel.utils.delegate.OnItemClickListener
+import com.nakharin.marvel.utils.extension.loadImage
 import kotlinx.android.synthetic.main.view_holder_content_body.view.*
 
 class ContentBodyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -20,7 +20,7 @@ class ContentBodyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     fun bind(position: Int, url: String, onItemClickListener: OnItemClickListener<String>?) {
-        itemView.contentBodyImgPhoto.load(url)
+        itemView.contentBodyImgPhoto.loadImage(url)
 
         itemView.contentBodyCrdRoot.setOnClickListener {
             onItemClickListener?.invoke(it, url, position)

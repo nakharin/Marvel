@@ -2,18 +2,12 @@ package com.nakharin.marvel.utils.extension
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
-import com.nakharin.marvel.GlideApp
+import coil.api.load
+import coil.request.CachePolicy
 import com.nakharin.marvel.R
 
 /*******************************************************************************************
@@ -21,7 +15,7 @@ import com.nakharin.marvel.R
  *******************************************************************************************/
 
 // https://proandroiddev.com/replace-progressdialog-with-a-progress-button-in-your-app-14ed1d50b44
-private fun provideCircularProgressDrawable(
+fun provideCircularProgressDrawable(
     context: Context,
     width: Int
 ): CircularProgressDrawable {
@@ -55,7 +49,12 @@ private fun provideCircularProgressDrawable(
     }
 }
 
-private fun loadImage(imageView: ImageView, url: String, isSkipMemoryCache: Boolean, isReSize: Boolean) {
+private fun loadImage(
+    imageView: ImageView,
+    url: String,
+    isSkipMemoryCache: Boolean,
+    isReSize: Boolean
+) {
     val vto = imageView.viewTreeObserver
     vto.addOnPreDrawListener(object : OnPreDrawListener {
         @SuppressLint("CheckResult")
@@ -65,132 +64,40 @@ private fun loadImage(imageView: ImageView, url: String, isSkipMemoryCache: Bool
             val height = imageView.measuredWidth
 
             val circularProgressDrawable = provideCircularProgressDrawable(imageView.context, width)
-            circularProgressDrawable.start()
 
-            val requestOptions = RequestOptions()
+            imageView.load(url) {
+                placeholder(circularProgressDrawable)
+                error(R.drawable.ic_error)
 
-            if (isReSize) {
-                requestOptions.override(width, height)
-            }
-
-            requestOptions.placeholder(circularProgressDrawable)
-//            requestOptions.error(R.drawable.vector_error_100dp)
-
-            if (isSkipMemoryCache) {
-                requestOptions.skipMemoryCache(true)
-                requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
-            }
-
-            val requestListener = object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    circularProgressDrawable.stop()
-                    return false
+                if (isReSize) {
+                    size(width, height)
                 }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    circularProgressDrawable.stop()
-                    return false
+                if (isSkipMemoryCache) {
+                    memoryCachePolicy(CachePolicy.DISABLED)
                 }
-            }
 
-            GlideApp.with(imageView.context)
-                .load(url)
-                .thumbnail(0.1f)
-                .apply(requestOptions)
-                .addListener(requestListener)
-                .into(imageView)
+                listener({
+                    circularProgressDrawable.start()
+                }, {
+                    circularProgressDrawable.stop()
+                }, { _, throwable ->
+                    throwable.printStackTrace()
+                    circularProgressDrawable.stop()
+                }, { _, _ ->
+                    circularProgressDrawable.stop()
+                })
+            }
 
             return true
         }
     })
 }
 
-//private fun loadImageWithHeader(imageView: ImageView, url: String, isSkipMemoryCache: Boolean) {
-//    val tokenPreference = TokenPreference(imageView.context)
-//    val headers = LazyHeaders.Builder()
-//        .addHeader(Constants.AUTHORIZATION, "Bearer ${tokenPreference.getAccessToken()}").build()
-//    val glideUrl = GlideUrl(url, headers)
-//
-//
-//    val vto = imageView.viewTreeObserver
-//    vto.addOnPreDrawListener(object : OnPreDrawListener {
-//        @SuppressLint("CheckResult")
-//        override fun onPreDraw(): Boolean {
-//            imageView.viewTreeObserver.removeOnPreDrawListener(this)
-//            val width = imageView.measuredHeight
-//            val height = imageView.measuredWidth
-//
-//            val circularProgressDrawable = provideCircularProgressDrawable(imageView.context, imageView.width)
-//            circularProgressDrawable.start()
-//
-//            val requestOptions = RequestOptions()
-//                .override(width, height)
-//                .placeholder(circularProgressDrawable)
-////                .error(R.drawable.vector_error_100dp)
-//
-//            if (isSkipMemoryCache) {
-//                requestOptions.skipMemoryCache(true)
-//                requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE)
-//            }
-//
-//            val requestListener = object : RequestListener<Drawable> {
-//                override fun onLoadFailed(
-//                    e: GlideException?,
-//                    model: Any?,
-//                    target: Target<Drawable>?,
-//                    isFirstResource: Boolean
-//                ): Boolean {
-//                    circularProgressDrawable.stop()
-//                    return false
-//                }
-//
-//                override fun onResourceReady(
-//                    resource: Drawable?,
-//                    model: Any?,
-//                    target: Target<Drawable>?,
-//                    dataSource: DataSource?,
-//                    isFirstResource: Boolean
-//                ): Boolean {
-//                    circularProgressDrawable.stop()
-//                    return false
-//                }
-//            }
-//
-//            GlideApp.with(imageView.context)
-//                .load(glideUrl)
-//                .thumbnail(0.1f)
-//                .apply(requestOptions)
-//                .addListener(requestListener)
-//                .into(imageView)
-//
-//            return true
-//        }
-//    })
-//}
-
 /*******************************************************************************************
  ************************************ Public Method ***************************************
  *******************************************************************************************/
 
-fun ImageView.load(url: String) {
+fun ImageView.loadImage(url: String) {
     loadImage(imageView = this, url = url, isSkipMemoryCache = false, isReSize = true)
 }
-
-fun ImageView.loadFullSize(url: String) {
-    loadImage(imageView = this, url = url, isSkipMemoryCache = false, isReSize = false)
-}
-
-//fun ImageView.loadWithHeader(url: String) {
-//    return loadImageWithHeader(imageView = this, url = url, isSkipMemoryCache = false)
-//}

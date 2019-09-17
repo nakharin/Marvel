@@ -1,4 +1,4 @@
-package com.nakharin.marvel.utils.`typealias`
+package com.nakharin.marvel.utils.delegate
 
 import android.view.View
 

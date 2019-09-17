@@ -11,8 +11,9 @@ import com.nakharin.marvel.presentation.BaseViewModel
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import com.nakharin.marvel.utils.coroutines.Coroutines
 import com.nakharin.marvel.utils.extension.addTo
-import com.nakharin.marvel.utils.extension.getBitmapFromStringUrl
+import com.nakharin.marvel.utils.extension.getDrawableFromStringUrl
 import com.nakharin.marvel.utils.extension.saveToGallery
+import com.nakharin.marvel.utils.extension.toBitmap
 import com.nakharin.marvel.utils.glide.UiOnProgressListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -81,7 +82,7 @@ class ContentViewModel(private val contentUseCase: ContentUseCase) : BaseViewMod
         Coroutines.main {
             saveImageState.value = ApiState.Loading
             val bitmap = withContext(Dispatchers.IO) {
-                url.getBitmapFromStringUrl(context, uiOnProgressListener)
+                url.getDrawableFromStringUrl().toBitmap()
             }
             val filePath = "${context.getString(R.string.app_name)}_$position.jpg"
             bitmap.saveToGallery(context, filePath, { path ->
