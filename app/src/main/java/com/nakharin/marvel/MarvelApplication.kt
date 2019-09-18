@@ -30,7 +30,7 @@ class MarvelApplication : Application() {
     private fun setUpKoin() {
         startKoin {
             androidLogger()
-            androidContext(this@MarvelApplication)
+            androidContext(applicationContext)
             modules(
                 listOf(
                     repositoryModule,
