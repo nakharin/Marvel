@@ -6,6 +6,7 @@ import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import coil.Coil
 import coil.api.load
 import coil.request.CachePolicy
 import com.nakharin.marvel.R
@@ -65,7 +66,7 @@ private fun loadImage(
 
             val circularProgressDrawable = provideCircularProgressDrawable(imageView.context, width)
 
-            imageView.load(url) {
+            Coil.load(imageView.context, url) {
                 placeholder(circularProgressDrawable)
                 error(R.drawable.ic_error)
 
@@ -87,6 +88,8 @@ private fun loadImage(
                 }, { _, _ ->
                     circularProgressDrawable.stop()
                 })
+
+                target(imageView)
             }
 
             return true
