@@ -1,6 +1,7 @@
 package com.nakharin.marvel.presentation
 
 import android.app.Dialog
+import android.os.Bundle
 import com.bumptech.glide.load.HttpException
 import com.emcsthai.pz.utilitylibrary.view.PzDialogConfirmFragment
 import com.emcsthai.pz.utilitylibrary.view.PzLoadingDialogView
@@ -10,6 +11,17 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 abstract class BaseMarvelActivity : BasePermissionActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initView()
+        initViewModel()
+    }
+
+    abstract fun initView()
+
+    abstract fun initViewModel()
 
     private val pzDialog: PzLoadingDialogView by inject { parametersOf(false) }
 

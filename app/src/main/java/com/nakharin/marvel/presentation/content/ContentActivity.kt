@@ -24,26 +24,24 @@ class ContentActivity : BaseMarvelActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setUpView()
-
         viewModel.fetchContentsAtCoroutines()
-
-        with(viewModel) {
-            observe(content) { contentObserver }
-            observe(saveImage) { saveImageObserver }
-        }
 
         contentAdapter.setOnItemClickLister(onItemClickListener)
     }
 
-    private fun setUpView() {
+    override fun initView() {
         contentAdapter = ContentAdapter()
         mainRcvContents.adapter = contentAdapter
     }
 
-    /************************************* Observer *********************************************/
+    override fun initViewModel() {
+        with(viewModel) {
+            observe(content) { content(it) }
+            observe(saveImage) { saveImage(it) }
+        }
+    }
 
-    private val contentObserver = Observer<ApiState<ContentResponse>> {
+    private fun content(it: ApiState<ContentResponse>) {
         when (it) {
             ApiState.Loading -> showLoading()
             is ApiState.Success -> {
@@ -56,7 +54,7 @@ class ContentActivity : BaseMarvelActivity() {
         }
     }
 
-    private val saveImageObserver = Observer<ApiState<String>> {
+    private fun saveImage(it: ApiState<String>) {
         when (it) {
             ApiState.Loading -> showLoading()
             is ApiState.Progress -> {
