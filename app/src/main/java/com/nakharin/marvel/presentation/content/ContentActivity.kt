@@ -8,7 +8,7 @@ import com.nakharin.marvel.R
 import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.presentation.BaseMarvelActivity
 import com.nakharin.marvel.presentation.content.adapter.ContentAdapter
-import com.nakharin.marvel.presentation.content.model.JsonContent
+import com.nakharin.marvel.presentation.content.model.ContentResponse
 import com.nakharin.marvel.utils.extension.observe
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,7 +43,7 @@ class ContentActivity : BaseMarvelActivity() {
 
     /************************************* Observer *********************************************/
 
-    private val contentObserver = Observer<ApiState<JsonContent>> {
+    private val contentObserver = Observer<ApiState<ContentResponse>> {
         when (it) {
             ApiState.Loading -> showLoading()
             is ApiState.Success -> {

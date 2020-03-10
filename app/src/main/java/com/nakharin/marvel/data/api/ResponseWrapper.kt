@@ -2,17 +2,7 @@ package com.nakharin.marvel.data.api
 
 import com.google.gson.annotations.SerializedName
 
-enum class Code(var code: Int) {
-    @SerializedName("-1")
-    UNDEFINED(-1),
-    @SerializedName("0")
-    SUCCEEDED(0),
-    @SerializedName("1")
-    FAILED(1)
-}
-
-data class ApiResponse<T>(
-
+data class ResponseWrapper<T>(
     @SerializedName("refCodeApi")
     val refCodeApi: String = "",
 
@@ -30,12 +20,21 @@ data class ApiResponse<T>(
 
     @SerializedName("data")
     var data: T? = null
-)
+) {
+    enum class Code(var code: Int) {
+        @SerializedName("-1")
+        UNDEFINED(-1),
+        @SerializedName("0")
+        SUCCEEDED(0),
+        @SerializedName("1")
+        FAILED(1)
+    }
+}
 
-val ApiResponse<*>.successfully
+val ResponseWrapper<*>.successfully
     get() = success && data != null
 
-fun <T> ApiResponse<T>.isSuccessfully(succeeded: (T) -> Unit, failed: (String) -> Unit) {
+fun <T> ResponseWrapper<T>.isSuccessfully(succeeded: (T) -> Unit, failed: (String) -> Unit) {
     if (success && data != null) {
         succeeded(data!!)
     } else {

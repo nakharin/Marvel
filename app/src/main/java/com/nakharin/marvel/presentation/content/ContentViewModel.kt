@@ -8,7 +8,7 @@ import com.nakharin.marvel.base.BaseViewModel
 import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.data.api.isSuccessfully
 import com.nakharin.marvel.domain.content.ContentUseCase
-import com.nakharin.marvel.presentation.content.model.JsonContent
+import com.nakharin.marvel.presentation.content.model.ContentResponse
 import com.nakharin.marvel.utils.extension.*
 import com.nakharin.marvel.utils.util.CoroutineUtils
 import com.nakharin.marvel.utils.glide.UiOnProgressListener
@@ -24,7 +24,7 @@ class ContentViewModel(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseViewModel() {
 
-    private val _content = MutableLiveData<ApiState<JsonContent>>()
+    private val _content = MutableLiveData<ApiState<ContentResponse>>()
     val content = _content.toLiveData()
 
     private val _saveImage = MutableLiveData<ApiState<String>>()

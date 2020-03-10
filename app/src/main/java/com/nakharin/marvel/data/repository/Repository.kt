@@ -1,11 +1,11 @@
 package com.nakharin.marvel.data.repository
 
-import com.nakharin.marvel.data.api.ApiResponse
-import com.nakharin.marvel.presentation.content.model.JsonContent
+import com.nakharin.marvel.data.api.ResponseWrapper
+import com.nakharin.marvel.presentation.content.model.ContentResponse
 import io.reactivex.Observable
 
 interface Repository {
-    fun getContents(): Observable<ApiResponse<JsonContent>>
+    fun getContents(): Observable<ResponseWrapper<ContentResponse>>
 
-    suspend fun getContentsCoroutines(): ApiResponse<JsonContent>
+    suspend fun getContentsCoroutines(): ResponseWrapper<ContentResponse>
 }
