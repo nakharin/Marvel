@@ -9,7 +9,7 @@ import com.nakharin.marvel.utils.delegate.OnItemClickListener
 import com.nakharin.marvel.utils.extension.loadImage
 import kotlinx.android.synthetic.main.view_holder_content_body.view.*
 
-class ContentBodyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class ContentBodyViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     companion object {
         fun create(parent: ViewGroup): ContentBodyViewHolder {

@@ -6,7 +6,7 @@ import com.nakharin.marvel.utils.delegate.OnItemClickListener
 
 class ContentAdapter : RecyclerView.Adapter<ContentBodyViewHolder>() {
 
-    private val mImages: ArrayList<String> = arrayListOf()
+    private var images: List<String> = arrayListOf()
 
     private var mOnItemClickListener: OnItemClickListener<String>? = null
 
@@ -15,16 +15,16 @@ class ContentAdapter : RecyclerView.Adapter<ContentBodyViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return mImages.size
+        return images.size
     }
 
     override fun onBindViewHolder(holder: ContentBodyViewHolder, position: Int) {
-        val imageUrl = mImages[position]
+        val imageUrl = images[position]
         holder.bind(position, imageUrl, mOnItemClickListener)
     }
 
     fun addAllItem(images: ArrayList<String>) {
-        mImages.addAll(images)
+        this.images = images
         notifyDataSetChanged()
     }
 
