@@ -2,13 +2,12 @@ package com.nakharin.marvel.domain.content
 
 import com.nakharin.marvel.data.api.ApiResponse
 import com.nakharin.marvel.data.repository.ApiRepository
-import com.nakharin.marvel.domain.BaseUseCase
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import io.reactivex.Observable
 import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 
-class ContentUseCase(private val apiRepository: ApiRepository) : BaseUseCase() {
+class ContentUseCase(private val apiRepository: ApiRepository) {
 
     fun execute(): Observable<ApiResponse<JsonContent>> {
         return apiRepository.getContents()

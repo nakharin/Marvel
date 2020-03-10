@@ -1,6 +1,6 @@
 package com.nakharin.marvel.domain
 
-import com.nakharin.marvel.data.source.ContentDataSource
+import com.nakharin.marvel.data.source.ContentLocalDataSource
 import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -14,7 +14,7 @@ class ContentUseCaseTest {
     @Test
     fun test_ContentUseCase_Should_Return_Success() {
 
-        val dataSource = ContentDataSource()
+        val dataSource = ContentLocalDataSource()
         val response = dataSource.generate()
 
         whenever(useCase.execute())

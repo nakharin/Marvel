@@ -3,6 +3,7 @@ package com.nakharin.marvel.utils.extension
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import coil.Coil
 import coil.api.get
 import com.bumptech.glide.load.DataSource
@@ -58,5 +59,13 @@ suspend fun String.getBitmapFromStringUrl(
 
 suspend fun String.getDrawableFromStringUrl(): Drawable {
     return Coil.get(this)
+}
+
+fun String?.toUri(): Uri? {
+    return try {
+        Uri.parse(this)
+    } catch (e: Throwable) {
+        null
+    }
 }
 

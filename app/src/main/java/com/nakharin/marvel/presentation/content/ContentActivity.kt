@@ -9,6 +9,7 @@ import com.nakharin.marvel.data.api.ApiState
 import com.nakharin.marvel.presentation.BaseMarvelActivity
 import com.nakharin.marvel.presentation.content.adapter.ContentAdapter
 import com.nakharin.marvel.presentation.content.model.JsonContent
+import com.nakharin.marvel.utils.extension.observe
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,8 +28,10 @@ class ContentActivity : BaseMarvelActivity() {
 
         viewModel.fetchContentsAtCoroutines()
 
-        viewModel.getContentState().observe(this, contentObserver)
-        viewModel.getSaveImageState().observe(this, saveImageObserver)
+        with(viewModel) {
+            observe(content) { contentObserver }
+            observe(saveImage) { saveImageObserver }
+        }
 
         contentAdapter.setOnItemClickLister(onItemClickListener)
     }

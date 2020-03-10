@@ -3,7 +3,7 @@ package com.nakharin.marvel.presentation
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nakharin.marvel.data.api.ApiState
-import com.nakharin.marvel.data.source.ContentDataSource
+import com.nakharin.marvel.data.source.ContentLocalDataSource
 import com.nakharin.marvel.domain.content.ContentUseCase
 import com.nakharin.marvel.presentation.content.ContentViewModel
 import com.nhaarman.mockitokotlin2.doReturn
@@ -47,7 +47,7 @@ class ContentViewModelTest {
     @Test
     fun testLoadData_hasData_ShouldReturnList() {
 
-        val dataSource = ContentDataSource()
+        val dataSource = ContentLocalDataSource()
         val response = dataSource.generate()
 
         whenever(useCase.execute())
@@ -61,7 +61,7 @@ class ContentViewModelTest {
 
     @Test
     fun testGetImageListShouldReturnList() {
-        val dataSource = ContentDataSource()
+        val dataSource = ContentLocalDataSource()
         val response = dataSource.generate()
         whenever(useCase.execute())
             .thenReturn(Observable.just(response))
@@ -77,7 +77,7 @@ class ContentViewModelTest {
     @Test
     fun testSaveImage_hasData_ShouldReturnSuccess() {
 
-        val dataSource = ContentDataSource()
+        val dataSource = ContentLocalDataSource()
         val response = dataSource.generate()
         val url = response.data!!.images[0]
 

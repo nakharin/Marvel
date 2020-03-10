@@ -1,8 +1,8 @@
-package com.nakharin.marvel.utils.coroutines
+package com.nakharin.marvel.utils.util
 
 import kotlinx.coroutines.*
 
-object Coroutines {
+object CoroutineUtils {
 
     fun main(scope: suspend () -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {

@@ -2,9 +2,11 @@ package com.nakharin.marvel.utils.extension
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.media.MediaScannerConnection
 import android.os.Environment
-import com.nakharin.marvel.utils.coroutines.Coroutines
+import com.nakharin.marvel.utils.util.CoroutineUtils
 import java.io.File
 import java.io.FileOutputStream
 
@@ -31,7 +33,7 @@ fun Bitmap.saveToGallery(
         out.close()
     } catch (e: Exception) {
         e.printStackTrace()
-        Coroutines.main {
+        CoroutineUtils.main {
             onException(e)
         }
     }
@@ -43,8 +45,27 @@ fun Bitmap.saveToGallery(
         arrayOf(file.toString()),
         null
     ) { path, _ ->
-        Coroutines.main {
+        CoroutineUtils.main {
             onCompleted(path)
         }
     }
+}
+
+operator fun Bitmap?.plus(bitmap: Bitmap?): Bitmap? {
+
+    if (this == null) return bitmap
+    if (bitmap == null) return this
+
+    val result = Bitmap.createBitmap(
+        width,
+        height,
+        config
+    )
+
+    val canvas = Canvas(result)
+
+    canvas.drawBitmap(this, 0f, 0f, null)
+    canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), null)
+
+    return result
 }

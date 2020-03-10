@@ -1,6 +1,6 @@
 package com.nakharin.marvel.data.repository
 
-import com.nakharin.marvel.data.source.ContentDataSource
+import com.nakharin.marvel.data.source.ContentLocalDataSource
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -13,7 +13,7 @@ class ApiRepositoryTest {
     @Test
     fun test_GetContent_Should_Return_Success() {
 
-        val dataSource = ContentDataSource()
+        val dataSource = ContentLocalDataSource()
         val response = dataSource.generate()
 
         whenever(repository.getContents())

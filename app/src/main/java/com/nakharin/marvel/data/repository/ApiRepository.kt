@@ -1,17 +1,25 @@
 package com.nakharin.marvel.data.repository
 
 import com.nakharin.marvel.data.api.ApiResponse
-import com.nakharin.marvel.data.source.ContentDataSource
+import com.nakharin.marvel.data.source.ContentLocalDataSource
 import com.nakharin.marvel.presentation.content.model.JsonContent
 import io.reactivex.Observable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class ApiRepository(private val dataSource: ContentDataSource) : Repository {
+class ApiRepository(
+    private val contentLocalDataSource: ContentLocalDataSource,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : Repository {
 
-    fun getContents(): Observable<ApiResponse<JsonContent>> {
-        return Observable.just(dataSource.generate())
+    override fun getContents(): Observable<ApiResponse<JsonContent>> {
+        return Observable.just(contentLocalDataSource.generate())
     }
 
-    suspend fun getContentsCoroutines(): ApiResponse<JsonContent> {
-        return dataSource.generate()
+    override suspend fun getContentsCoroutines(): ApiResponse<JsonContent> {
+        return withContext(dispatcher) {
+            contentLocalDataSource.generate()
+        }
     }
 }
